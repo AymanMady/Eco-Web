@@ -48,7 +48,7 @@ export default function QuestionPage() {
   }
 
   const onChoice = (answerUser: boolean) => {
-    if (answerUser) {
+    if (answerUser === currentQuestion.answer) {
       setPoints(points + 1);
     } else {
       setPoints(points - 1);

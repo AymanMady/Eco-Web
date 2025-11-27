@@ -56,7 +56,7 @@ export default function Home() {
           </div>
           <div className="collapse-content"> 
             <ul className="list-disc list-inside space-y-2 text-sm">
-              <li>Vous ferez face à 8 choix techniques d'éco-conception web</li>
+              <li>Vous ferez face à 10 choix techniques d'éco-conception web</li>
               <li>Pour chaque choix, décidez si vous l'adopteriez ou non</li>
               <li>Découvrez l'impact réel de chaque décision (CO2, bande passante...)</li>
               <li>Obtenez votre eco-score et apprenez les bonnes pratiques Green IT</li>

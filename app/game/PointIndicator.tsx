@@ -9,12 +9,8 @@ export default function PointIndicators() {
   // Calculer le score sur 100
   // actualQuestion est un index (commence à 0), donc le nombre de questions répondues est actualQuestion + 1
   const questionsAnswered = Math.min(actualQuestion + 1, questions.length);
-  // Chaque bonne réponse = +10%, chaque mauvaise réponse = -10%
-  // points = nombre de bonnes réponses
-  // (questionsAnswered - points) = nombre de mauvaises réponses
-  const percentage = questionsAnswered > 0 
-    ? Math.max(0, Math.round((points * 10) - ((questionsAnswered - points) * 10))) 
-    : 0;
+
+  const percentage = points * 10;
   
   // Déterminer le niveau d'éco-conception
   let ecoLevel = "Débutant";
