@@ -2,18 +2,16 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="footer items-center p-4 bg-base-200 text-base-content absolute bottom-0 border-t border-base-300/50">
-      <aside className="items-center grid-flow-col">
-        <Link href={"/"}>
-          <p className="opacity-70 hover:opacity-100 transition">
-            Copyright © 2025 EcoWeb
-          </p>
+    <footer className="border-t border-white/10 bg-base-100/5">
+      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-4 py-4 text-xs text-base-content/60 sm:flex-row">
+        <Link href="/" className="opacity-70 hover:opacity-100 transition">
+          <span>© 2025 Green IT — Tous droits réservés</span>
         </Link>
-      </aside>
-      <nav className="grid-flow-col gap-4 md:place-self-center md:justify-self-end">
-        <p>Restez green avec EcoWeb 🌱</p>
-      </nav>
+        <p className="flex items-center gap-1">
+          <span className="text-emerald-400">●</span>
+          <span>Conçu pour des expériences web plus sobres 🌱</span>
+        </p>
+      </div>
     </footer>
   );
 }
-

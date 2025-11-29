@@ -1,33 +1,26 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { ToastContainer } from "./components/Toast";
 import "react-toastify/dist/ReactToastify.css";
 import { appName, appUrl, description } from "./manifest";
 import ThemeController from "./providers/ThemeProvider";
-import Navbar from "./components/Navbar";
+import Header from "./components/Header";
 import Footer from "./components/Footer";
 
-const inter = Inter({
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
   title: appName,
+  description,
   metadataBase: new URL(appUrl),
-  description: description,
   openGraph: {
     title: appName,
-    description: description,
+    description,
     url: appUrl,
-    siteName: appName,
-    locale: "fr_FR",
-    type: "website",
   },
-  icons: {
-    icon: `/favicon.ico`,
-  },
-  manifest: "manifest.json",
 };
 
 export default function RootLayout({
@@ -37,13 +30,25 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr">
-      <body className={inter.className}>
+      <body className={spaceGrotesk.className}>
         <ThemeController>
-          <Navbar />
-          <div className="pb-24 pt-24">{children}</div>
-          <Footer />
+          
+          {/* ✔️ HEADER FIXE TRANSPARENT */}
+          <Header />
+
+          <div className="relative min-h-screen flex flex-col">
+            {/* ✔️ Padding-top pour que le header ne recouvre pas le contenu */}
+            <main className="flex-1 pt-[120px] pb-16">
+              <div className="mx-auto max-w-6xl px-4">
+                {children}
+              </div>
+            </main>
+
+            <Footer />
+          </div>
+
+          <ToastContainer />
         </ThemeController>
-        <ToastContainer />
       </body>
     </html>
   );

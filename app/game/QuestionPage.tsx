@@ -14,6 +14,7 @@ export default function QuestionPage() {
     points,
     setLastAnwser,
     resetGame,
+    setActualQuestion,
   } = useContext(GameContext);
 
   if (!questions || questions.length === 0) {
@@ -22,7 +23,7 @@ export default function QuestionPage() {
 
   const currentQuestion = questions[actualQuestion];
 
-  // Si on a dépassé le nombre de questions, afficher un message de fin
+  // Si plus de question -> écran de fin simple
   if (!currentQuestion) {
     return (
       <div className="flex flex-col gap-6 items-center justify-center min-h-[50vh]">
@@ -48,26 +49,33 @@ export default function QuestionPage() {
   }
 
   const onChoice = (answerUser: boolean) => {
+    // mise à jour du score
     if (answerUser === currentQuestion.answer) {
       setPoints(points + 1);
     } else {
       setPoints(points - 1);
     }
 
+    // on garde la dernière réponse (utile pour la page de résultats)
     setLastAnwser(answerUser);
 
-    // Petit délai pour s'assurer que le contexte est mis à jour avant la navigation
-    setTimeout(() => {
-      router.push("/game/result");
-    }, 30);
+    const isLastQuestion = actualQuestion >= questions.length - 1;
+
+    if (isLastQuestion) {
+      // dernière question → on va vers la page d’infos
+      setTimeout(() => {
+        router.push("/game/result");
+      }, 30);
+    } else {
+      // sinon → on passe simplement à la question suivante, SANS changer de page
+      setActualQuestion(actualQuestion + 1);
+    }
   };
 
   return (
     <Question
-      img={currentQuestion.imageUrl}
       question={currentQuestion.title}
       onChoice={onChoice}
     />
   );
 }
-
