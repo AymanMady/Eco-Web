@@ -1,3 +1,185 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ------------------------------ */
+/* 🎨 COULEURS GLOBALES DU SITE   */
+/* ------------------------------ */
+
+:root {
+  --page-bg: #2854a5;                /* bleu de fond */
+  --card-bg: rgba(10, 24, 61, 0.95); /* bleu marine pour les cartes */
+  --card-border: rgba(255, 255, 255, 0.18);
+}
+
+/* Fond global : bleu partout */
+html,
+body,
+#__next {
+  min-height: 100vh;
+  background-color: var(--page-bg) !important;
+  background-image: none !important;
+  color: #e5f0ff !important;
+}
+
+/* Si DaisyUI met un data-theme */
+[data-theme] {
+  background-color: var(--page-bg) !important;
+  background-image: none !important;
+}
+
+/* ------------------------------ */
+/* 🧩 COMPONENTS : CARTES & BOUTONS */
+/* ------------------------------ */
+
+@layer components {
+  /* Cartes */
+  .glass-card {
+    @apply rounded-3xl p-6 border backdrop-blur-xl;
+    background-color: var(--card-bg);
+    border-color: var(--card-border);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+  }
+
+  .hero-card {
+    @apply glass-card p-8;
+  }
+
+  /* Bouton principal */
+  .pill-button-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold tracking-wide text-white;
+    background: linear-gradient(90deg, #2ec4ff, #53ffb0);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+
+  .pill-button-primary:hover {
+    transform: translateY(-2px);
+    opacity: 0.95;
+  }
+
+  .pill-button-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2 text-sm font-medium border text-white;
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.3);
+    transition: background-color 0.15s ease;
+  }
+
+  .pill-button-ghost:hover {
+    background-color: rgba(255, 255, 255, 0.14);
+  }
+
+  /* Statistiques */
+  .stat-chip {
+    @apply inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-xs text-white;
+    background-color: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+}
+
+/* ------------------------------ */
+/* 🧼 TEXTE LISIBLE DANS LES CARTES */
+/* ------------------------------ */
+
+/* Tout le texte dans les cartes = clair */
+.glass-card,
+.glass-card * {
+  color: #e5f0ff !important;
+}
+
+/* Carte héro aussi */
+.hero-card,
+.hero-card * {
+  color: #e5f0ff !important;
+}
+
+/* Titres un peu plus flashy */
+.glass-card h1,
+.glass-card h2,
+.glass-card h3,
+.hero-card h1,
+.hero-card h2,
+.hero-card h3 {
+  color: #7df9ff !important; /* turquoise */
+}
+
+/* Paragraphes plus doux */
+.glass-card p,
+.hero-card p {
+  color: #cfe6ff !important;
+}
+
+/* Boutons dans les cartes : texte bien lisible */
+.glass-card button,
+.hero-card button {
+  color: #e5f0ff !important;
+}
+
+/* ------------------------------ */
+/* 🧼 OVERRIDES ANTI-JAUNE DAISYUI */
+/* ------------------------------ */
+
+/* Les backgrounds crème / jaunes de base */
+.bg-base-100,
+.bg-base-200,
+.bg-base-300,
+.card,
+.card-body {
+  background-color: var(--card-bg) !important;
+  color: #e5f0ff !important;
+}
+
+/* Boutons / badges / alertes warning (jaunes) */
+.bg-warning,
+.btn-warning,
+.badge-warning,
+.alert-warning {
+  background-color: #2ec4ff !important;
+  border-color: #2ec4ff !important;
+  color: #0b1220 !important;
+}
+
+/* Si jamais il reste des bg-yellow-xxx Tailwind */
+[class*="bg-yellow-"] {
+  background-color: #2ec4ff !important;
+  color: #0b1220 !important;
+}
+
+/* ------------------------------ */
+/* 🌍 ANIMATIONS DE LA PLANÈTE    */
+/* ------------------------------ */
+
+@keyframes planet-float {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-8px) scale(1.02);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes cloud-orbit {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.planet-float {
+  animation: planet-float 4s ease-in-out infinite;
+}
+
+.cloud-orbit {
+  animation: cloud-orbit 18s linear infinite;
+  transform-origin: 50% 50%;
+}
+
+/* Désactivation totale des halos verts de la planète */
+.planet-halo {
+  display: none !important;
+}

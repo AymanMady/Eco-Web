@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useEffect } from "react";
 import { Question as QuestionModel } from "../models/question.model";
-import { ThemeContext } from "./ThemeProvider";
 import useLocalStorage from "../hooks/useLocalStorage";
 
 export const GameContext = createContext<{
@@ -14,15 +13,23 @@ export const GameContext = createContext<{
   setPoints: (points: number) => void;
   setActualQuestion: (actualQuestion: number) => void;
   resetGame: () => void;
+
+  // ✅ NOUVEAU : toutes les réponses de l’utilisateur
+  userAnswers: Record<number, boolean>;
+  setUserAnswer: (questionId: number, value: boolean) => void;
 }>({
   questions: [],
   actualQuestion: 0,
   points: 0,
   lastAnswer: false,
-  setPoints: () => { },
-  setActualQuestion: () => { },
-  setLastAnwser: () => { },
-  resetGame: () => { },
+  setPoints: () => {},
+  setActualQuestion: () => {},
+  setLastAnwser: () => {},
+  resetGame: () => {},
+
+  // ✅ valeurs par défaut
+  userAnswers: {},
+  setUserAnswer: () => {},
 });
 
 export default function GameProvider({
@@ -33,34 +40,53 @@ export default function GameProvider({
   questions: QuestionModel[];
 }) {
   const [points, setPoints] = useLocalStorage<number>("game_points", 0);
-  const [actualQuestion, setActualQuestion] = useLocalStorage<number>("game_actualQuestion", 0);
-  const [lastAnswer, setLastAnwser] = useLocalStorage<boolean>("game_lastAnswer", false);
+  const [actualQuestion, setActualQuestion] =
+    useLocalStorage<number>("game_actualQuestion", 0);
+  const [lastAnswer, setLastAnwser] = useLocalStorage<boolean>(
+    "game_lastAnswer",
+    false
+  );
 
-  const { setTheme } = useContext(ThemeContext);
+  // ✅ NOUVEAU : stockage de TOUTES les réponses (par id de question)
+  const [userAnswers, setUserAnswers] = useLocalStorage<
+    Record<number, boolean>
+  >("game_userAnswers", {});
 
-  const themesPoints = [
-    "sunset",
-    "forest",
-    "halloween",
-    "aqua",
-    "synthwave",
-    "business",
-    "cyberpunk",
-    "night",
-    "coffee",
-  ];
+  // const { setTheme } = useContext(ThemeContext);
+
+  // const themesPoints = [
+  //   "sunset",
+  //   "forest",
+  //   "halloween",
+  //   "aqua",
+  //   "synthwave",
+  //   "business",
+  //   "cyberpunk",
+  //   "night",
+  //   "coffee",
+  // ];
+
+  // ✅ NOUVEAU : fonction pour enregistrer une réponse
+  const setUserAnswer = (questionId: number, value: boolean) => {
+    setUserAnswers((prev) => ({
+      ...prev,
+      [questionId]: value,
+    }));
+  };
 
   const resetGame = () => {
     setPoints(0);
     setActualQuestion(0);
     setLastAnwser(false);
+    // ✅ on vide toutes les réponses enregistrées
+    setUserAnswers({});
   };
 
-  useEffect(() => {
-    const theme = themesPoints.at(points % themesPoints.length);
-    setTheme(theme as string);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [points]);
+  // useEffect(() => {
+  //   const theme = themesPoints.at(points % themesPoints.length);
+  //   setTheme(theme as string);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [points]);
 
   return (
     <GameContext.Provider
@@ -73,10 +99,13 @@ export default function GameProvider({
         setActualQuestion,
         setLastAnwser,
         resetGame,
+
+        //  on expose aussi les nouvelles valeurs dans le context
+        userAnswers,
+        setUserAnswer,
       }}
     >
       {children}
     </GameContext.Provider>
   );
 }
-

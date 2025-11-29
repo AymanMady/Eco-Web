@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 
-export const appName = "EcoWeb";
-export const description = "Restez green avec EcoWeb";
+export const appName = "Green IT";
+export const description = "Green IT – Simulateur ludique pour découvrir l'éco-conception web.";
 export const appUrl = "http://localhost:3000";
 export const themeColor = "#101323";
 

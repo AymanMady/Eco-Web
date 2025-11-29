@@ -1,122 +1,120 @@
 "use client";
 
-import createGlobe from "cobe";
-import { useContext, useEffect, useRef } from "react";
-import { ThemeContext } from "../providers/ThemeProvider";
-import daisyuiColors from "daisyui/src/theming/themes";
-import { Theme } from "daisyui";
-// import ratGIF from "@/public/funny-rat-funny.gif";
-import Image from "next/image";
-import { toast } from "@/app/components/Toast";
-import { KonaContext } from "@/app/providers/KonamiProvider";
+import React from "react";
 
-function normalizeOKLCHArray(oklchArray: number[]) {
-  // Define the minimum and maximum values for each component
-  const minValues = [0, 0, 0];
-  const maxValues = [100, 50, 360];
-
-  // Normalize each component
-  const normalizedArray = oklchArray.map((value, index) => {
-    return (value - minValues[index]) / (maxValues[index] - minValues[index]);
-  });
-
-  // Return the normalized values as an array
-  return normalizedArray;
+interface PlanetProps {
+  mood?: "happy" | "sad"; // happy par défaut
+  size?: number;
 }
 
-function convertColor(theme: string, which: string) {
-  var parse = require("color-parse");
-  const parsed_value = parse.default(daisyuiColors[theme as Theme][which]);
-  if (parsed_value.space == "oklch") {
-    return normalizeOKLCHArray(parsed_value.values);
-  } else {
-    return [
-      parsed_value.values[0] / 255,
-      parsed_value.values[1] / 255,
-      parsed_value.values[2] / 255,
-    ];
-  }
-}
+export default function Planet({ mood = "happy", size = 260 }: PlanetProps) {
+  const isHappy = mood === "happy";
 
-export default function Planet() {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const width = 500;
-  const height = 500;
+  // bouche différente selon l'humeur
+  const mouthPath = isHappy
+    ? "M85 115 Q100 130 115 115" // sourire
+    : "M85 125 Q100 110 115 125"; // bouche triste
 
-  const { theme } = useContext(ThemeContext);
-  const { konami } = useContext(KonaContext);
-
-  useEffect(() => {
-    if (konami) {
-      const audio = document.querySelector("audio");
-      audio!.addEventListener("ended", () => {
-        toast.success("Bravo, vous avez effectué le Konami Code !");
-      });
-    }
-  }, [konami]);
-
-  useEffect(() => {
-    let phi = 0;
-
-    const base = convertColor(theme, "primary");
-    const glow = convertColor(theme, "accent");
-
-    const globe = createGlobe(canvasRef.current!, {
-      devicePixelRatio: 2,
-      width: width * 2,
-      height: height * 2,
-      phi: 0,
-      theta: 0.2,
-      dark: 1,
-      diffuse: 1.2,
-      mapSamples: 16000,
-      mapBrightness: 100,
-      baseColor: [glow[0], glow[1], glow[2]],
-      markerColor: [0.1, 0.8, 1],
-      glowColor: [base[0], base[1], base[2]],
-      markers: [
-        // longitude latitude
-        // { location: [37.7595, -122.4367], size: 0.03 },
-        // { location: [40.7128, -74.006], size: 0.1 }
-      ],
-      onRender: (state) => {
-        // Called on every animation frame.
-        // `state` will be an empty object, return updated params.
-        state.phi = phi;
-        phi += 0.005; // this is the speed of the rotation of the earth
-      },
-    });
-
-    return () => {
-      globe.destroy();
-    };
-  }, [theme]);
+  // sourcils (uniquement pour sad)
+  const leftBrowY1 = isHappy ? 78 : 76;
+  const leftBrowY2 = isHappy ? 78 : 74;
+  const rightBrowY1 = isHappy ? 78 : 74;
+  const rightBrowY2 = isHappy ? 78 : 76;
 
   return (
-    <div>
-      {konami ? (
-        <Image
-          className="absolute"
-          src={"/funny-rat-funny.gif"}
-          alt="my gif"
-          height={600}
-          width={500}
-        />
-      ) : null}
-      {konami ? (
-        <audio autoPlay>
-          <source src={"RAT_VERT.mp3"} type="audio/mp3" />
-        </audio>
-      ) : null}
-      <canvas
-        ref={canvasRef}
-        style={{
-          width: width,
-          height: height,
-          maxWidth: "100%",
-          aspectRatio: 1,
-        }}
-      />
-    </div>
+    // <div className="relative flex items-center justify-center">
+    //   {/* halo animé */}
+    //   <div
+    //     className="planet-halo absolute rounded-full bg-emerald-400/40 blur-3xl"
+    //     style={{ width: size + 80, height: size + 80 }}
+    //   />
+    //   <div
+    //     className="planet-float relative rounded-full bg-slate-900/90 shadow-xl shadow-emerald-500/50"
+    //     style={{ width: size + 40, height: size + 40 }}
+    //   >
+        <svg
+          width={size}
+          height={size}
+          viewBox="0 0 200 200"
+          className="block m-auto"
+        >
+          {/* disque principal */}
+          <circle cx="100" cy="100" r="80" fill="#0ea5e9" />
+
+          {/* continents simplifiés */}
+          <path
+            d="M60 60 Q80 40 105 55 Q120 70 115 90 Q110 105 90 100 Q70 95 60 80 Z"
+            fill="#22c55e"
+          />
+          <path
+            d="M120 110 Q140 100 150 115 Q160 130 150 145 Q135 155 120 145 Z"
+            fill="#22c55e"
+          />
+          <path
+            d="M40 110 Q55 100 70 110 Q80 120 70 135 Q55 145 45 135 Z"
+            fill="#22c55e"
+          />
+
+          {/* nuages en orbite */}
+          <g className="cloud-orbit">
+            <ellipse
+              cx="60"
+              cy="45"
+              rx="18"
+              ry="7"
+              fill="#e5f3ff"
+              opacity="0.9"
+            />
+            <ellipse
+              cx="140"
+              cy="155"
+              rx="18"
+              ry="7"
+              fill="#e5f3ff"
+              opacity="0.9"
+            />
+          </g>
+
+          {/* yeux */}
+          <circle cx="75" cy="90" r="13" fill="#0f172a" />
+          <circle cx="125" cy="90" r="13" fill="#0f172a" />
+          <circle cx="70" cy="85" r="5" fill="#f9fafb" />
+          <circle cx="120" cy="85" r="5" fill="#f9fafb" />
+
+          {/* joues */}
+          <circle cx="63" cy="110" r="7" fill="#fb7185" opacity="0.9" />
+          <circle cx="132" cy="110" r="7" fill="#fb7185" opacity="0.9" />
+
+          {/* bouche */}
+          <path
+            d={mouthPath}
+            fill="transparent"
+            stroke="#111827"
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
+
+          {/* sourcils (un peu inclinés en mode triste) */}
+          <line
+            x1="66"
+            y1={leftBrowY1}
+            x2="82"
+            y2={leftBrowY2}
+            stroke="#111827"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+          <line
+            x1="118"
+            y1={rightBrowY1}
+            x2="134"
+            y2={rightBrowY2}
+            stroke="#111827"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </svg>
+    //   </div>
+    // </div>
   );
 }
